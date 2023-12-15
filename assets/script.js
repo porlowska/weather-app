@@ -2,7 +2,9 @@ let weatherAPIkey = '5df8cc936cf95ce37c74cbdcd95eed3c';
 let today = $('#today')
 let forecast = $('#forecast')
 
-// construstc final URL to fetch the weather and display it in the web browser
+renderHistory();
+
+//displays the weather: final URL to fetch the weather and display it in the web browser
 function chooseCity(cityName){
 
 // construct HTML for todays weather
@@ -53,7 +55,7 @@ function chooseCity(cityName){
             console.log(data);
 
             if( data.cod == 404){ // checks if name of the city is spelled correctly/ found. 
-                forecast.append($('<p>Thank you!</p>'))
+                return;
 
             }else{
                 for(let i=0; i<data.list.length; i=i+8){
@@ -82,11 +84,40 @@ function chooseCity(cityName){
             }
         })
 }
+// saves search history 
 
-$('#search-button').on('click', function(e){
+
+
+// Function for displaying movie data
+function renderHistory() {
+    let searchHistory = Object.values(localStorage);
+    $("#history").empty(); // to stop repeatition of buttons
+  // Looping through the array of searchHistory
+    for (var i = 0; i < searchHistory.length; i++) {
+        $("#history").append($('<button class="history-search-btn">').attr("data-city", searchHistory[i]).text(searchHistory[i]));
+    }
+}
+
+//clears history 
+$('#clear').click(function(){
+    localStorage.clear();
+})
+
+$('#search-button').click(function(e){
     e.preventDefault();
     let city = $("#search-input").val().trim();
     today.empty();
     forecast.empty();
-    return chooseCity(city)
+    localStorage.setItem(city, city)
+    return chooseCity(city), renderHistory();
+})
+
+$('.history-search-btn').click(function(e){
+    e.preventDefault();
+    console.log(this)
+    let city = $(this).data("city");
+    console.log(city)
+    today.empty();
+    forecast.empty();
+    return chooseCity(city);
 })
