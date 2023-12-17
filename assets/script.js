@@ -58,6 +58,8 @@ function chooseCity(cityName){
                 return;
 
             }else{
+                forecast.append($('<h2> 5 days forecast </h2>'))
+
                 for(let i=0; i<data.list.length; i=i+8){
 
                     let date = dayjs(data.list[i].dt_txt).format('DD MMM YYYY');// The date
